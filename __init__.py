@@ -39,7 +39,7 @@ def create_app():
 	@app.route("/login")
 	def loginpage():
 		cursor = dbconn.cursor()
-		username= 'navenBIGD'
+		username= 'naveenBIGD'
 		name='NAVEEN'
 		password='1234567'
 		cursor.execute("SELECT id,pwd from users where uname=%s",(username,))
@@ -59,12 +59,27 @@ def create_app():
 	@app.route("/register")
 	def registration():
 		cursor = dbconn.cursor()
-		username= 'naveenBIGD'
-		name='NAVEEN'
-		password='1234567'
+		username= 'lee45'
+		name='LENOAH CHACKO'
+		password='chackol33'
 		cursor.execute("INSERT INTO users (name, uname, pwd) VALUES(%s, %s, %s)",(name, username, password))
 		dbconn.commit()
 		return "details entered"
+	
+
+	@app.route("/fillnote")
+	def getnote():
+		cursor = dbconn.cursor()
+		userid= 1
+		ntitle='Gaming at 3'
+		description='Gotta get AIR 1 in temple run'
+		hashtag_ids='mobile, gaming'
+		cursor.execute("INSERT INTO notes (title,dcp,hids,uid) VALUES(%s, %s, %s, %s)",(ntitle, description, hashtag_ids, userid))
+		cursor.execute("SELECT title,dcp,hids from notes where uid= %s",(userid,))
+		values= cursor.fetchall()
+		dbconn.commit()
+		return f"Note Entered:\n{values}"
+		
 	
 	return app	
 
