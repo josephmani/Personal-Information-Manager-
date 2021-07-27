@@ -39,9 +39,9 @@ def create_app():
 	@app.route("/login")
 	def loginpage():
 		cursor = dbconn.cursor()
-		username= 'jes2'
-		name='Jesvin'
-		password='jeee'
+		username= 'lee'
+		name='Lenoah'
+		password='manipwoli'
 		cursor.execute("SELECT id,pwd from users where uname=%s",(username,))
 		temp= cursor.fetchone()
 		
@@ -59,21 +59,21 @@ def create_app():
 	@app.route("/register")
 	def registration():
 		cursor = dbconn.cursor()
-		username= 'jes2'
-		name='Jesvin'
-		password='jeee'
+		username= 'lee'
+		name='Lenoah'
+		password='manipwoli'
 		cursor.execute("INSERT INTO users (name, uname, pwd) VALUES(%s, %s, %s)",(name, username, password))
 		dbconn.commit()
 		return "details entered"
 	
 
 	@app.route("/fillnote")
-	def getnotes():
+	def fillnotes():
 		cursor = dbconn.cursor()
-		userid= 3
-		ntitle='gaming'
-		description='cod playtime'
-		hashtag_ids='play'
+		userid= 2
+		ntitle='internship'
+		description='shakthiman foundation'
+		hashtag_ids='hustle'
 		hash_id=hashtag_ids.split(',')
 		
 				
@@ -95,6 +95,17 @@ def create_app():
 		cursor.execute("SELECT title,dcp,hids from notes where uid= %s",(userid,))
 		values= cursor.fetchall()
 		return f"Note Entered:\n{values}"
+
+
+	@app.route("/getallnotes")
+	def getnotes():
+		cursor = dbconn.cursor()
+		userid= 2
+		cursor.execute("SELECT * from notes where uid= %s",(userid,))
+		values= cursor.fetchall()
+		dbconn.commit()
+		return f"Notes: \n{values}"
+
 		
 	@app.route("/update")
 	def updatenote():
@@ -150,11 +161,13 @@ def create_app():
 	@app.route("/hashtags")
 	def gethashtags():
 		cursor = dbconn.cursor()
-		userid= 3
+		userid= 2
 		cursor.execute("SELECT label from hashtags where uid= %s",(userid,))
 		values= cursor.fetchall()
 		dbconn.commit()
-		return f"Hashtags:\n{values}"					
+		return f"Hashtags:\n{values}"			
+		
+				
 	
 	return app	
 
