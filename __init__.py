@@ -1,8 +1,9 @@
 import psycopg2
 import urllib.parse as up
 
-from flask import Flask,g
+from flask import Flask,g,request
 from flask import render_template,jsonify
+from flask_cors import CORS,cross_origin
 
 import os
 from os.path import join, dirname
@@ -26,37 +27,41 @@ port=url.port
 
 def create_app():
 #create_app is a keyword.
-	app= Flask("pim")
+	app= Flask(__name__)
+	#CORS(app)
 	app.config.from_mapping(
 		DATABASE= "pimdb"
 	)
 		
 	@app.route("/")
+	#@cross_origin()
 	def index():
-		return "hello"
+		response = jsonify(message="Simple server is running")
+		return response
 		
 	
-	@app.route("/login")
+	@app.route("/login", methods=["POST"])
+	#@cross_origin())
 	def loginpage():
 		cursor = dbconn.cursor()
-		username= 'lee'
-		name='Lenoah'
-		password='manipwoli'
+		print('haha')
+		#print(request.form)
+		username= request.json['username']
+		password= request.json['password']
 		cursor.execute("SELECT id,pwd from users where uname=%s",(username,))
 		temp= cursor.fetchone()
-		
 		if temp:
 			deets,passcode=temp
 			if passcode==password:
-				return "Sett."
+				return jsonify(temp)
 			else:
-				return "Wrong Passcode."
+				return jsonify(message="Incorrect password")
 		else:
-			return "Please complete the registration."
+			return jsonify(message="Incorrect username")
 				
 
 	
-	@app.route("/register")
+	@app.route("/register", methods=["POST"])
 	def registration():
 		cursor = dbconn.cursor()
 		username= 'lee'
@@ -67,7 +72,7 @@ def create_app():
 		return "details entered"
 	
 
-	@app.route("/fillnote")
+	@app.route("/fillnote", methods=["POST"])
 	def fillnotes():
 		cursor = dbconn.cursor()
 		userid= 2
@@ -97,17 +102,18 @@ def create_app():
 		return f"Note Entered:\n{values}"
 
 
-	@app.route("/getallnotes")
+	@app.route("/getallnotes", methods=["GET"])
 	def getnotes():
 		cursor = dbconn.cursor()
 		userid= 2
 		cursor.execute("SELECT * from notes where uid= %s",(userid,))
 		values= cursor.fetchall()
 		dbconn.commit()
-		return f"Notes: \n{values}"
+		response = jsonify(values)
+		return response
 
 		
-	@app.route("/update")
+	@app.route("/update", methods=["PUT"])
 	def updatenote():
 		cursor = dbconn.cursor()
 		userid=3
@@ -140,7 +146,7 @@ def create_app():
 		return f"Note Updated as:\n{values}"	
 		
 	
-	@app.route("/delete")
+	@app.route("/delete", methods=["DELETE"])
 	def deletenote():
 		cursor = dbconn.cursor()
 		userid=3
@@ -158,16 +164,15 @@ def create_app():
 
 
 	
-	@app.route("/hashtags")
+	@app.route("/hashtags", methods=["GET"])
 	def gethashtags():
 		cursor = dbconn.cursor()
 		userid= 2
 		cursor.execute("SELECT label from hashtags where uid= %s",(userid,))
 		values= cursor.fetchall()
 		dbconn.commit()
-		return f"Hashtags:\n{values}"			
-		
-				
+		response = jsonify(values)
+		return response		
 	
 	return app	
 
