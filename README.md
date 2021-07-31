@@ -2,7 +2,8 @@
 _Server for https://github.com/lenoah-chacko/pimtrackr_
 
 **Link to Project:** https://pimtrackr.web.app/login
-###Technical resources used
+
+### Technical resources used
   1) **Framework(Language) used:** Flask(Python) 
   2) **Database used:** PostgreSQL with https://www.elephantsql.com
   3) **Deployed on:** Heroku
